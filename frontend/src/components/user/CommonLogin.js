@@ -1,21 +1,30 @@
 import React from 'react';
 
 import request from 'umi-request';
-import { Form, Icon, Input, Button, Checkbox, Modal, message } from 'antd';
+import PropTypes from 'prop-types';
+import {
+  Form, Icon, Input, Button, Checkbox, Modal, message,
+} from 'antd';
 
-import CommonStacktraceContent from '../common/CommonStacktraceContent.js';
+import CommonStacktraceContent from '../common/CommonStacktraceContent';
 
 import styles from './CommonLogin.css';
 
-class CommonLogin extends React.Component {
+class InlineCommonLogin extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    loginLoading: false,
-  };
+    this.state = {
+      loginLoading: false,
+    };
 
-  handleSubmit = e => {
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    const { form } = this.props;
+    form.validateFields((err, values) => {
       if (err) {
         return;
       }
@@ -30,15 +39,15 @@ class CommonLogin extends React.Component {
             'Content-Type': 'application/json',
           },
         })
-        .then(response => {
+        .then((response) => {
           if (response.success) {
-            window.location.href = '/';
+            global.window.location.href = '/';
           } else {
             message.error(response.message);
           }
           this.setState({ loginLoading: false });
         })
-        .catch(error => {
+        .catch((error) => {
           this.setState({ loginLoading: false });
           Modal.info({
             title: `后端错误：${error.data.message}`,
@@ -48,10 +57,12 @@ class CommonLogin extends React.Component {
           });
         });
     });
-  };
+  }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { loginLoading } = this.state;
+    const { form } = this.props;
+    const { getFieldDecorator } = form;
     return (
       <div className={styles['login-bg']}>
         <div id="components-normal-login" className={styles['login-box']}>
@@ -89,7 +100,7 @@ class CommonLogin extends React.Component {
               <Button
                 type="primary"
                 htmlType="submit"
-                loading={this.state.loginLoading}
+                loading={loginLoading}
                 className={styles['login-form-button']}
               >
                 登录
@@ -102,5 +113,9 @@ class CommonLogin extends React.Component {
   }
 }
 
-const WrappedCommonLogin = Form.create({ name: 'user-login' })(CommonLogin);
-export default WrappedCommonLogin;
+InlineCommonLogin.propTypes = {
+  form: PropTypes.isRequired,
+};
+
+const CommonLogin = Form.create({ name: 'user-login' })(InlineCommonLogin);
+export default CommonLogin;

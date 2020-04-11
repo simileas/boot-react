@@ -1,9 +1,11 @@
 import React from 'react';
 
-import WrapperCommonLogin from '../components/user/CommonLogin.js';
+import CommonLogin from '../components/user/CommonLogin';
 
 export default class Login extends React.Component {
+  componentDidMount() {}
+
   render() {
-    return <WrapperCommonLogin />;
+    return <CommonLogin />;
   }
 }

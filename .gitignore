@@ -10,12 +10,12 @@ target/
 *.ipr
 
 # production
-*/node_modules
-*/node
-*/build
+**/node_modules
+**/node
+**/build
 
 # testing
-/coverage
+**/coverage
 
 # misc
 .DS_Store
@@ -30,7 +30,6 @@ yarn-error.log*
 
 **/.umi
 **/.umi-production
-
+**/.settings
 **/dist
-
 **/package-lock.json

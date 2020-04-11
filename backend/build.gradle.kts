@@ -3,6 +3,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.8.RELEASE"
 	id("java")
 	id("com.gorylenko.gradle-git-properties") version "2.2.0"
+  checkstyle
 }
 
 group = "cn.cas.common"
@@ -60,4 +61,12 @@ tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
 		into("static")
 	}
 	launchScript()
+}
+
+checkstyle {
+  configFile = file("${configDir}/google_checks.xml")
+  dependencies {
+    checkstyle("com.puppycrawl.tools:checkstyle:8.31")
+    checkstyle("com.github.sevntu-checkstyle:sevntu-checks:1.37.1")
+  }
 }
