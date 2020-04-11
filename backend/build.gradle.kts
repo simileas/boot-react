@@ -1,0 +1,63 @@
+plugins {
+	id("org.springframework.boot") version "2.2.1.RELEASE"
+	id("io.spring.dependency-management") version "1.0.8.RELEASE"
+	id("java")
+	id("com.gorylenko.gradle-git-properties") version "2.2.0"
+}
+
+group = "cn.cas.common"
+version = "1.0.0"
+
+repositories {
+	mavenCentral()
+}
+
+configure<JavaPluginConvention> {
+	setSourceCompatibility(1.8)
+	setTargetCompatibility(1.8)
+}
+
+val developmentOnly by configurations.creating
+configurations.runtimeClasspath.extendsFrom(developmentOnly)
+
+dependencies {
+	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1")
+
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.projectlombok:lombok")
+
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	runtimeOnly("com.h2database:h2")
+	runtimeOnly("mysql:mysql-connector-java")
+	testImplementation("org.springframework.boot:spring-boot-starter-test") {
+		exclude("org.junit.vintage", "junit-vintage-engine")
+	}
+
+	annotationProcessor("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
+	compile("commons-codec:commons-codec:1.13")
+	compile("commons-io:commons-io:2.6")
+	compile("com.opencsv:opencsv:4.6")
+	compile("org.apache.commons:commons-lang3:3.9")
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
+
+springBoot {
+	buildInfo()
+}
+
+tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+	archiveName = "boot-react.jar"
+	dependsOn(":frontend:build")
+	from("../frontend/dist") {
+		eachFile {
+			println("Copy file to jar: ${name}")
+		}
+		into("static")
+	}
+	launchScript()
+}
