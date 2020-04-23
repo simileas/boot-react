@@ -2,6 +2,7 @@ import primaryTheme from '@ant-design/aliyun-theme';
 export default {
   theme: primaryTheme,
   treeShaking: true,
+  hash: true,
   routes: [
     {
       path: '/',
