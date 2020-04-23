@@ -2,74 +2,85 @@ import React from 'react';
 
 import router from 'umi/router';
 import request from 'umi-request';
+import PropTypes from 'prop-types';
 
 import Link from 'umi/link';
-import { Avatar, Layout, Menu, Icon, Dropdown, Spin } from 'antd';
-import { ConfigProvider } from 'antd';
+import {
+  Avatar, Layout, Menu, Icon, Dropdown, Spin, ConfigProvider,
+} from 'antd';
 
 import zhCN from 'antd/es/locale/zh_CN';
-
 import styles from './index.css';
 
-const { Header, Content, Footer, Sider } = Layout;
+const {
+  Header, Content, Footer, Sider,
+} = Layout;
 
 export default class BasicLayout extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    currentMenu: '/',
-    showOverlay: true,
-  };
+    this.state = {
+      currentMenu: '/',
+      showOverlay: true,
+    };
 
-  componentDidMount = () => {
+    this.linkTo = this.linkTo.bind(this);
+    this.logout = this.logout.bind(this);
+  }
 
+  componentDidMount() {
+    const { location } = this.props;
     // 1. 进入判断是否登录，如果 pathname 不是 "/login"，页面是 loading 状态，如果没有登录，就跳转到 "/login"
-    if (this.props.location.pathname !== '/login') {
+    if (location.pathname !== '/login') {
       request
         .get('/api/user/current')
-        .then(response => {
-          if (response.success && response.object) {
+        .then((response) => {
+          if (response && response.length > 0) {
             this.setState({ showOverlay: false });
           } else {
             router.push('/login');
           }
         })
-        .catch(error => {
-          console.log(error);
+        .catch((error) => {
+          global.console.log(error);
         });
     }
-    this.setState({ currentMenu: this.props.location.pathname });
+    this.setState({ currentMenu: location.pathname });
 
     // 2. 一般首页不是 "/"，需要重定向一下，例如重定向到 "/dashboard", 在此处写明
-    if (this.props.location.pathname === '/') {
-      let defaultIndexPath = "/dashboard";
+    if (location.pathname === '/') {
+      const defaultIndexPath = '/dashboard';
       router.push(defaultIndexPath);
       this.setState({ currentMenu: defaultIndexPath });
     }
-  };
+  }
 
-  linkTo = item => {
+  linkTo(item) {
     if (item.key.indexOf('http:') > -1) {
-      window.location.href = item.key;
+      this.window.location.href = item.key;
     } else {
       router.push(item.key);
       this.setState({ currentMenu: item.key });
     }
-  };
+  }
 
-  logout = e => {
+  logout() {
     request
       .get('/api/user/logout')
-      .then(response => {
+      .then((response) => {
         if (response.success) {
           router.push('/login');
         }
       })
-      .catch(error => {
-        console.log(error);
+      .catch((error) => {
+        this.window.console.log(error);
       });
-  };
+  }
 
   render() {
+    const { currentMenu, showOverlay } = this.state;
+    const { children, location } = this.props;
     const menu = (
       <Menu>
         <Menu.Item>
@@ -80,30 +91,33 @@ export default class BasicLayout extends React.Component {
       </Menu>
     );
 
-    if (this.props.location.pathname === '/login') {
-      return <React.Fragment>{this.props.children}</React.Fragment>;
+    if (location.pathname === '/login') {
+      return <React.Fragment>{children}</React.Fragment>;
     }
 
     return (
       <ConfigProvider locale={zhCN}>
-        {this.state.showOverlay ? (
+        {showOverlay ? (
           <div className={styles.overlay}>
             <Spin size="large" />
           </div>
         ) : (
           <Layout>
-            <Sider style={{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 }}>
+            <Sider style={{
+              overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+            }}
+            >
               <a href="/">
                 <div className={styles.logo} />
               </a>
-              <Menu theme="dark" mode="inline" onClick={this.linkTo} selectedKeys={[this.state.currentMenu]}>
+              <Menu theme="dark" mode="inline" onClick={this.linkTo} selectedKeys={currentMenu}>
                 <Menu.Item key="/dashboard">
                   <Icon type="dashboard" theme="filled" />
                   <span className="nav-text">仪表板</span>
                 </Menu.Item>
-                <Menu.Item key="/admin-portal">
-                  <Icon type="setting" theme="filled" />
-                  <span className="nav-text">管理员区域</span>
+                <Menu.Item key="/settings">
+                  <Icon type="setting" />
+                  <span className="nav-text">系统管理</span>
                 </Menu.Item>
               </Menu>
             </Sider>
@@ -119,7 +133,7 @@ export default class BasicLayout extends React.Component {
                 </div>
               </Header>
               <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-                <div style={{ background: '#fff', textAlign: 'center' }}>{this.props.children}</div>
+                <div style={{ background: '#fff', textAlign: 'center' }}>{children}</div>
               </Content>
               <Footer style={{ textAlign: 'center' }}>© 2019</Footer>
             </Layout>
@@ -129,3 +143,8 @@ export default class BasicLayout extends React.Component {
     );
   }
 }
+
+BasicLayout.propTypes = {
+  children: PropTypes.element.isRequired,
+  location: PropTypes.object.isRequired,
+};

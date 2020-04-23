@@ -3,7 +3,9 @@ export default {
 
   'GET /api/user/current': (req, res) => {
     setTimeout(() => {
-      res.send({ success: true, object: {} });
+      res.send([{
+        userId: 1,
+      }]);
     }, 1000);
   },
 
