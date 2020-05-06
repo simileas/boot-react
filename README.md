@@ -22,6 +22,12 @@ backend 目录下执行：
 ../gradlew bootRun -x test -info
 ````
 
+持续编译：
+
+````
+../gradlew build --continuous -x :frontend:bundle -x test
+````
+
 frontend 目录下执行：
 
 ````shell script
