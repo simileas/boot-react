@@ -21,6 +21,10 @@ export default {
           component: './login',
         },
         {
+          path: '/user/profile',
+          component: './user/profile',
+        },
+        {
           path: '/',
           component: './index',
         },

@@ -98,7 +98,8 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
     }
 
     private boolean isIgnored(String path) {
-      return ignoredPaths.contains(path);
+      return ignoredPaths.stream()
+        .map(path::startsWith).reduce((one, more) -> one || more).orElse(false);
     }
 
     private boolean isHandled(String path) {
