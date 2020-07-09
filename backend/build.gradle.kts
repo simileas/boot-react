@@ -23,7 +23,6 @@ configurations.runtimeClasspath.extendsFrom(developmentOnly)
 
 dependencies {
   implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1")
-
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.projectlombok:lombok")
@@ -41,6 +40,7 @@ dependencies {
   compile("commons-io:commons-io:2.6")
   compile("com.opencsv:opencsv:4.6")
   compile("org.apache.commons:commons-lang3:3.9")
+  compile("org.apache.httpcomponents:httpclient:4.5.12")
 }
 
 tasks.withType<Test> {

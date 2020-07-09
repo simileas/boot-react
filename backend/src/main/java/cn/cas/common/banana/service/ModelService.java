@@ -2,8 +2,10 @@ package cn.cas.common.banana.service;
 
 import cn.cas.common.banana.entity.Header;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import sun.net.www.protocol.https.HttpsURLConnectionImpl;
 
 @Component
 @Slf4j
