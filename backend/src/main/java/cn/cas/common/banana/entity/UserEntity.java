@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Message {
+public class UserEntity {
 
-  private String message;
-  private Object object;
+  private Long id;
+  private String username;
 }

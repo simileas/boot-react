@@ -38,9 +38,7 @@ dependencies {
   testAnnotationProcessor("org.projectlombok:lombok")
   compile("commons-codec:commons-codec:1.13")
   compile("commons-io:commons-io:2.6")
-  compile("com.opencsv:opencsv:4.6")
   compile("org.apache.commons:commons-lang3:3.9")
-  compile("org.apache.httpcomponents:httpclient:4.5.12")
 }
 
 tasks.withType<Test> {
@@ -49,6 +47,10 @@ tasks.withType<Test> {
 
 springBoot {
   buildInfo()
+}
+
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+  environment("spring.profiles.active", "dev")
 }
 
 tasks.named<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {

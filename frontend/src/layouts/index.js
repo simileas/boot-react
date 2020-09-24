@@ -36,7 +36,7 @@ export default class BasicLayout extends React.Component {
       request
         .get('/api/user/current')
         .then((response) => {
-          if (response && response.length > 0) {
+          if (response.object) {
             this.setState({ showOverlay: false });
           } else {
             router.push('/login');
@@ -92,7 +92,7 @@ export default class BasicLayout extends React.Component {
     );
 
     if (location.pathname === '/login') {
-      return <React.Fragment>{children}</React.Fragment>;
+      return <>{children}</>;
     }
 
     return (

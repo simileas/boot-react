@@ -1,17 +1,20 @@
-
 export default {
 
   'GET /api/user/current': (req, res) => {
     setTimeout(() => {
-      res.send([{
-        userId: 1,
-      }]);
+      res.send({
+        message: '',
+        object: {
+          id: 1,
+          username: null,
+        },
+      });
     }, 1000);
   },
 
   'POST /api/user/login': (req, res) => {
     setTimeout(() => {
-      res.send({ success: true, message: '', object: {} });
+      res.send({ message: '', object: {} });
     }, 1000);
   },
 };

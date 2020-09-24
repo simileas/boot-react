@@ -1,8 +1,9 @@
 .logo {
   height: 32px;
-  background: url('../assets/logo-2.svg') 0 0 no-repeat;;
+  background: rgba(255, 255, 255, 0.2);
   margin: 16px;
 }
+
 .overlay {
   overflow: auto;
   background-color: #fff;

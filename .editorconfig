@@ -12,5 +12,12 @@ insert_final_newline = true
 [*.md]
 trim_trailing_whitespace = false
 
+[*.java]
+ij_continuation_indent_size = 4
+ij_java_blank_lines_after_imports = 1
+ij_java_blank_lines_before_imports = 1
+ij_java_class_count_to_use_import_on_demand = 50
+ij_java_names_count_to_use_import_on_demand = 50
+
 [Makefile]
 indent_style = tab

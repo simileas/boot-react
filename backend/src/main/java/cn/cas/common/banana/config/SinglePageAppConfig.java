@@ -29,8 +29,8 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
   }
 
   private static class PushStateResourceResolver implements ResourceResolver {
-    private Resource index = new ClassPathResource("/static/index.html");
-    private List<String> handledExtensions =
+    private final Resource index = new ClassPathResource("/static/index.html");
+    private final List<String> handledExtensions =
         Arrays.asList(
             "html",
             "js",
@@ -48,7 +48,7 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
             "ico",
             "txt",
             "map");
-    private List<String> ignoredPaths = Arrays.asList("api", "error", "actuator");
+    private final List<String> ignoredPaths = Arrays.asList("api", "error", "actuator");
 
     @Override
     public Resource resolveResource(
