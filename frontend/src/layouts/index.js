@@ -87,7 +87,7 @@ export default class BasicLayout extends React.Component {
           <Link to="/user/profile">用户设置</Link>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item onClick={this.logout}>登出</Menu.Item>
+        <Menu.Item>登出</Menu.Item>
       </Menu>
     );
 
@@ -115,7 +115,7 @@ export default class BasicLayout extends React.Component {
                   <Icon type="dashboard" theme="filled" />
                   <span className="nav-text">仪表板</span>
                 </Menu.Item>
-                <Menu.Item key="/settings">
+                <Menu.Item key="/admin-portal">
                   <Icon type="setting" />
                   <span className="nav-text">系统管理</span>
                 </Menu.Item>
@@ -133,7 +133,7 @@ export default class BasicLayout extends React.Component {
                 </div>
               </Header>
               <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-                <div style={{ background: '#fff', textAlign: 'center' }}>{children}</div>
+                <div style={{ background: '#fff' }}>{children}</div>
               </Content>
               <Footer style={{ textAlign: 'center' }}>© 2019</Footer>
             </Layout>

@@ -51,3 +51,22 @@ npm run lint
 ````
 
 提交代码前请按要求调整代码格式。
+
+## Systemd 部署
+
+配置文件：`/etc/systemd/system/boot-react.service`
+
+```text
+[Unit]
+Description=Boot React
+After=syslog.target
+
+[Service]
+User=root
+Environment='JAVA_HOME=/usr/java/default' 'JAVA_OPTS=-Xmx4g -Xms4g'
+ExecStart=/opt/boot-react/boot-react.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
+```
