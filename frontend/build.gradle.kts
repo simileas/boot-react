@@ -12,8 +12,8 @@ tasks.named<Jar>("jar") {
 }
 
 node() {
-  version = "10.16.0"
-  npmVersion = "6.4.1"
+  version = "12.20.0"
+  npmVersion = "6.14.8"
   distBaseUrl = "https://npm.taobao.org/mirrors/node/"
   download = true
   workDir = file("${project.buildDir}/node")
@@ -21,12 +21,8 @@ node() {
   nodeModulesDir = file("${project.projectDir}")
 }
 
-tasks.register<NpmTask>("npmInstallVerbose") {
-  setArgs(listOf("install", "-verbose"))
-}
-
 tasks.register<NpmTask>("bundle") {
-  dependsOn("npmInstallVerbose")
+  dependsOn("npmInstall")
   setArgs(listOf("run", "build"))
 }
 

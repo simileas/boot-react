@@ -75,7 +75,7 @@ class InlineCommonLogin extends React.Component {
                 rules: [{ required: true, message: '请输入用户名' }],
               })(
                 <Input
-                  ref={(input) => input && input.focus()}
+                  ref={input => input && input.focus()}
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   placeholder="用户名"
                 />,
