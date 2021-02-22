@@ -25,6 +25,8 @@ dependencies {
   implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
+  implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.security:spring-security-test")
   implementation("org.projectlombok:lombok")
 
   developmentOnly("org.springframework.boot:spring-boot-devtools")
