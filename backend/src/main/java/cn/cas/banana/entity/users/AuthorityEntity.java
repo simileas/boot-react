@@ -1,4 +1,4 @@
-package cn.cas.common.banana.entity;
+package cn.cas.banana.entity.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

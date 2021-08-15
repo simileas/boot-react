@@ -1,4 +1,4 @@
-package cn.cas.common.banana.bean;
+package cn.cas.banana.bean;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;

@@ -1,4 +1,4 @@
-package cn.cas.common.banana.config;
+package cn.cas.banana.config;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;

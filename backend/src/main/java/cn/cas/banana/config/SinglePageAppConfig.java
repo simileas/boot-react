@@ -1,4 +1,4 @@
-package cn.cas.common.banana.config;
+package cn.cas.banana.config;
 
 import java.io.IOException;
 import java.util.Arrays;

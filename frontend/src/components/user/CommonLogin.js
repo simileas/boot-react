@@ -1,12 +1,9 @@
 import React from 'react';
 
 import request from 'umi-request';
-import PropTypes from 'prop-types';
 import {
-  Form, Icon, Input, Button, Checkbox, Modal, message,
+  Form, Icon, Input, Button, Checkbox, message,
 } from 'antd';
-
-import CommonStacktraceContent from '../common/CommonStacktraceContent';
 
 import styles from './CommonLogin.css';
 
@@ -30,31 +27,25 @@ class InlineCommonLogin extends React.Component {
       }
       this.setState({ loginLoading: true });
       request
-        .post('/api/user/login', {
-          data: {
-            username: values.username,
-            password: values.password,
+        .get('/api/user/login', {
+          params: {
+            'remember-me': values['remember-me'],
           },
           headers: {
-            'Content-Type': 'application/json',
+            Authorization: `Basic ${global.btoa(`${values.username}:${values.password}`)}`,
           },
         })
-        .then((response) => {
-          if (response.success) {
-            global.window.location.href = '/';
-          } else {
-            message.error(response.message);
-          }
+        .then(() => {
           this.setState({ loginLoading: false });
+          global.window.location.href = '/';
         })
         .catch((error) => {
           this.setState({ loginLoading: false });
-          Modal.info({
-            title: `后端错误：${error.data.message}`,
-            content: React.createElement(CommonStacktraceContent, { content: error.data.object }),
-            style: { top: 20 },
-            width: 900,
-          });
+          if (error.response.status === 401) {
+            message.error('用户名或密码错误');
+          } else {
+            global.console.log(error.data);
+          }
         });
     });
   }
@@ -77,6 +68,7 @@ class InlineCommonLogin extends React.Component {
                 <Input
                   ref={input => input && input.focus()}
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                  autoFocus
                   placeholder="用户名"
                 />,
               )}
@@ -93,10 +85,10 @@ class InlineCommonLogin extends React.Component {
               )}
             </Form.Item>
             <Form.Item>
-              {getFieldDecorator('remember', {
+              {getFieldDecorator('remember-me', {
                 valuePropName: 'checked',
-                initialValue: true,
-              })(<Checkbox disabled={false}>保持登录</Checkbox>)}
+                initialValue: false,
+              })(<Checkbox>保持登录</Checkbox>)}
               <Button
                 type="primary"
                 htmlType="submit"
@@ -112,10 +104,6 @@ class InlineCommonLogin extends React.Component {
     );
   }
 }
-
-InlineCommonLogin.propTypes = {
-  form: PropTypes.isRequired,
-};
 
 const CommonLogin = Form.create({ name: 'user-login' })(InlineCommonLogin);
 export default CommonLogin;

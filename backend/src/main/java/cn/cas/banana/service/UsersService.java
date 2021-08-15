@@ -1,4 +1,4 @@
-package cn.cas.common.banana.service;
+package cn.cas.banana.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -8,7 +8,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UsersService {
 
   @Autowired
   private JdbcUserDetailsManager jdbcUserDetailsManager;
@@ -19,12 +19,11 @@ public class UserService {
   /**
    * 创建用户.
    */
-  public void createUser() {
+  public void createDefaultUser() {
     UserDetails user =
         User.builder()
             .username("admin")
             .password("admin")
-            .disabled(false)
             .roles("ADMIN")
             .passwordEncoder(password -> passwordEncoder.encode(password))
             .build();

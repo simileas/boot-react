@@ -1,6 +1,6 @@
-package cn.cas.common.banana.controller;
+package cn.cas.banana.controller;
 
-import cn.cas.common.banana.entity.Message;
+import cn.cas.banana.entity.Message;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContext;
@@ -35,8 +35,8 @@ public class UserController {
     WebAuthenticationDetails details =
         (WebAuthenticationDetails) context.getAuthentication().getDetails();
     UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
-    log.info("user {} logged in: ip {}", userDetails.getUsername(), details.getRemoteAddress());
-    httpSession.setAttribute(SESSION_CURRENT_KEY, userDetails);
+    log.info("{} LOGIN IP: {}", userDetails.getUsername(), details.getRemoteAddress());
+    httpSession.setAttribute("current", userDetails);
     return Message.builder().message("LOGIN").build();
   }
 }

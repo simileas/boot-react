@@ -1,4 +1,4 @@
-# 公共研发小组 web 项目框架模板
+# 2020 - 2021 Web 开发小组项目框架模板
 
 ## 编译方法
 
@@ -35,6 +35,18 @@ npm install
 
 npm start -verbose
 ````
+
+### 前端关闭 MOCK
+
+可以通过配置关闭：
+
+```javascript
+export default {
+  mock: false,
+};
+```
+
+也可以通过环境变量临时关闭，`MOCK=none npm start`;
 
 ## 代码规范
 

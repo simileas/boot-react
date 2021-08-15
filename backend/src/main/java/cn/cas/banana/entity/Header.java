@@ -1,4 +1,4 @@
-package cn.cas.common.banana.entity;
+package cn.cas.banana.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Message {
+public class Header {
 
-  private String message;
-  private Object object;
+  private String key;
+  private String value;
 }

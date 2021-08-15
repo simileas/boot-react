@@ -17,6 +17,10 @@ export default {
           component: './admin-portal',
         },
         {
+          path: '/users',
+          component: './users',
+        },
+        {
           path: '/login',
           component: './login',
         },
