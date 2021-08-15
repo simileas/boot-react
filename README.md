@@ -42,7 +42,7 @@ npm start -verbose
 
 ```javascript
 export default {
-  mock: false,
+  mock: { exclude: ['**/*.js'] },
 };
 ```
 
