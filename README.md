@@ -82,3 +82,11 @@ SuccessExitStatus=143
 [Install]
 WantedBy=multi-user.target
 ```
+
+## Windows 环境下换行符的问题
+
+Windows 环境下默认的换行符是 CRLF，所以安装 git 的时候，会有一个可选择的配置 line ending conversions。
+
+默认选项是将 LF 作为换行符的文件转换为 CRLF，即设置 `core.autocrlf=true`。如果选择 "Checkout as-is, commit as-is"，那么自动转换将会关闭。
+
+我们推荐使用后一种配置方式。如果已经安装了 git，可以使用命令 `git config --system core.autocrlf false` 或者 `git config --global core.autocrlf false` 修改配置。

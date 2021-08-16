@@ -4,7 +4,7 @@
     "start": "umi dev",
     "build": "umi build",
     "test": "umi test",
-    "lint": "eslint '{src,mock}/**/*.js' --fix",
+    "lint": "eslint \"{src,mock}/**/*.js\" --fix",
     "precommit": "lint-staged"
   },
   "dependencies": {
