@@ -14,8 +14,7 @@ public class RestExceptionController {
   ResponseEntity<Message> constraintViolation(
       SQLIntegrityConstraintViolationException exception) {
     return new ResponseEntity<>(
-        Message.builder()
-            .message(exception.getMessage()).build(),
+        Message.builder().message(exception.getMessage()).build(),
         HttpStatus.BAD_REQUEST);
   }
 }

@@ -5,8 +5,10 @@ export default {
       res.send({
         message: '',
         object: {
-          id: 1,
-          username: null,
+          username: 'admin',
+          authorities: [
+            { authority: 'ROLE_ADMIN' },
+          ],
         },
       });
     }, 1000);

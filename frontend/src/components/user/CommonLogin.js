@@ -43,8 +43,10 @@ class InlineCommonLogin extends React.Component {
           this.setState({ loginLoading: false });
           if (error.response.status === 401) {
             message.error('用户名或密码错误');
+          } else if (error.response.status === 403) {
+            message.error('用户被禁用');
           } else {
-            global.console.log(error.data);
+            global.console.log(error.response);
           }
         });
     });
@@ -66,10 +68,10 @@ class InlineCommonLogin extends React.Component {
                 rules: [{ required: true, message: '请输入用户名' }],
               })(
                 <Input
-                  ref={input => input && input.focus()}
                   prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   autoFocus
                   placeholder="用户名"
+                  autoComplete="username"
                 />,
               )}
             </Form.Item>
@@ -80,6 +82,7 @@ class InlineCommonLogin extends React.Component {
                 <Input
                   prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                   type="password"
+                  autoComplete="current-password"
                   placeholder="密 码"
                 />,
               )}

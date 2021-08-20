@@ -29,6 +29,14 @@ export default {
           component: './user/profile',
         },
         {
+          path: '/user/profile',
+          component: './user/profile',
+        },
+        {
+          path: '/user/set-password',
+          component: './user/set-password',
+        },
+        {
           path: '/',
           component: './index',
         },

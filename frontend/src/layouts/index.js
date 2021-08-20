@@ -12,6 +12,8 @@ import {
 import zhCN from 'antd/es/locale/zh_CN';
 import styles from './index.css';
 
+import UserContext from '../components/common/UserContext';
+
 const {
   Header, Content, Footer, Sider,
 } = Layout;
@@ -22,6 +24,7 @@ export default class BasicLayout extends React.Component {
 
     this.state = {
       currentMenu: '/',
+      currentUser: {},
       showOverlay: true,
     };
 
@@ -47,7 +50,7 @@ export default class BasicLayout extends React.Component {
         .get('/api/user/current')
         .then((response) => {
           if (response.object) {
-            this.setState({ showOverlay: false });
+            this.setState({ showOverlay: false, currentUser: response.object });
           } else {
             router.push('/login');
           }
@@ -88,12 +91,12 @@ export default class BasicLayout extends React.Component {
   }
 
   render() {
-    const { currentMenu, showOverlay } = this.state;
+    const { currentMenu, currentUser, showOverlay } = this.state;
     const { children, location } = this.props;
     const menu = (
       <Menu>
         <Menu.Item>
-          <Link to="/user/profile">用户设置</Link>
+          <Link to="/user/set-password">设置密码</Link>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item onClick={this.logout}>登出</Menu.Item>
@@ -105,50 +108,52 @@ export default class BasicLayout extends React.Component {
     }
 
     return (
-      <ConfigProvider locale={zhCN}>
-        {showOverlay ? (
-          <div className={styles.overlay}>
-            <Spin size="large" />
-          </div>
-        ) : (
-          <Layout>
-            <Sider style={{
-              overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
-            }}
-            >
-              <a href="/">
-                <div className={styles.logo} />
-              </a>
-              <Menu theme="dark" mode="inline" onClick={this.linkTo} selectedKeys={currentMenu}>
-                <Menu.Item key="/dashboard">
-                  <Icon type="dashboard" theme="filled" />
-                  <span className="nav-text">仪表板</span>
-                </Menu.Item>
-                <Menu.Item key="/users">
-                  <Icon type="setting" />
-                  <span className="nav-text">用户管理</span>
-                </Menu.Item>
-              </Menu>
-            </Sider>
-            <Layout style={{ marginLeft: 200 }}>
-              <Header style={{ background: '#fff', padding: 0 }}>
-                <div style={{ height: 64, float: 'right' }}>
-                  <Dropdown overlay={menu} placement="bottomLeft">
-                    <div className={[styles.clearfix, styles['user-dropdown']].join(' ')} style={{ height: 64 }}>
-                      <div style={{ float: 'left', marginLeft: 12 }}>Administrator</div>
-                      <Avatar icon="user" size={40} style={{ float: 'left', margin: '12px' }} />
-                    </div>
-                  </Dropdown>
-                </div>
-              </Header>
-              <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-                <div style={{ background: '#fff' }}>{children}</div>
-              </Content>
-              <Footer style={{ textAlign: 'center' }}>© 2019</Footer>
+      <UserContext.Provider value={currentUser}>
+        <ConfigProvider locale={zhCN}>
+          {showOverlay ? (
+            <div className={styles.overlay}>
+              <Spin size="large" />
+            </div>
+          ) : (
+            <Layout>
+              <Sider style={{
+                overflow: 'auto', height: '100vh', position: 'fixed', left: 0,
+              }}
+              >
+                <a href="/">
+                  <div className={styles.logo} />
+                </a>
+                <Menu theme="dark" mode="inline" onClick={this.linkTo} selectedKeys={currentMenu}>
+                  <Menu.Item key="/dashboard">
+                    <Icon type="dashboard" theme="filled" />
+                    <span className="nav-text">仪表板</span>
+                  </Menu.Item>
+                  <Menu.Item key="/users">
+                    <Icon type="setting" />
+                    <span className="nav-text">用户管理</span>
+                  </Menu.Item>
+                </Menu>
+              </Sider>
+              <Layout style={{ marginLeft: 200 }}>
+                <Header style={{ background: '#fff', padding: 0 }}>
+                  <div style={{ height: 64, float: 'right' }}>
+                    <Dropdown overlay={menu} placement="bottomLeft">
+                      <div className={[styles.clearfix, styles['user-dropdown']].join(' ')} style={{ height: 64 }}>
+                        <div style={{ float: 'left', marginLeft: 12 }}>{currentUser.username}</div>
+                        <Avatar icon="user" size={40} style={{ float: 'left', margin: '12px' }} />
+                      </div>
+                    </Dropdown>
+                  </div>
+                </Header>
+                <Content style={{ margin: '18px 16px 0', overflow: 'initial' }}>
+                  <div style={{ background: '#fff' }}>{children}</div>
+                </Content>
+                <Footer style={{ textAlign: 'center' }}>© Web Dev. 2019-2021</Footer>
+              </Layout>
             </Layout>
-          </Layout>
-        )}
-      </ConfigProvider>
+          )}
+        </ConfigProvider>
+      </UserContext.Provider>
     );
   }
 }

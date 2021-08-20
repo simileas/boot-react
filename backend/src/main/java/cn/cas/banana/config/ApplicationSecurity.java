@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -13,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
@@ -29,6 +30,12 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
   private UserDetailsService userDetailsService;
 
   @Override
+  @Bean
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
+
+  @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests()
         .antMatchers("/api/**")
@@ -38,7 +45,13 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         .and()
         .httpBasic()
         .realmName("common-dev")
-        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        .authenticationEntryPoint((request, response, authException) -> {
+          if (authException instanceof DisabledException) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+          } else {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+          }
+        })
         .and()
         .rememberMe()
         .userDetailsService(userDetailsService)
@@ -61,7 +74,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
    * @return JdbcUserDetailsManager instance
    */
   @Bean
-  public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
+  public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) throws Exception {
     JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
     jdbcUserDetailsManager.setDataSource(dataSource);
     return jdbcUserDetailsManager;

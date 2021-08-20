@@ -6,7 +6,7 @@ import {
 import request from 'umi-request';
 
 import NewUserForm from '../components/users/NewUserForm';
-import UpdatePwdForm from '../components/users/UpdatePasswordForm';
+import UpdatePasswordForm from '../components/users/UpdatePasswordForm';
 
 export default class Users extends React.Component {
   constructor() {
@@ -19,11 +19,11 @@ export default class Users extends React.Component {
         current: 1,
         pageSize: 10,
       },
-      showCreateUserForm: false,
+      showNewUserForm: false,
       newUserConfirmLoading: false,
       showUpdatePasswordForm: false,
-      updatePwdConfirmLoading: false,
-      currentUsername: '',
+      updatePasswordConfirmLoading: false,
+      selectedUsername: '',
     };
     this.pagination = {
       total: 0,
@@ -100,7 +100,7 @@ export default class Users extends React.Component {
             },
           })
           .then(() => {
-            this.setState({ newUserConfirmLoading: false, showCreateUserForm: false });
+            this.setState({ newUserConfirmLoading: false, showNewUserForm: false });
             this.loadData();
             props.form.resetFields();
           })
@@ -135,7 +135,7 @@ export default class Users extends React.Component {
   updateUserStatus(username, enabled) {
     this.setState({ loading: true });
     request
-      .post(`/api/users/state/${username}`, {
+      .post('/api/users/state', {
         params: {
           username,
           enabled,
@@ -153,25 +153,24 @@ export default class Users extends React.Component {
   }
 
   handleUpdatePassword() {
-    const { currentUsername } = this.state;
-    this.setState({ updatePwdConfirmLoading: true });
-    const { props } = this.updatePwdForm;
+    this.setState({ updatePasswordConfirmLoading: true });
+    const { props } = this.updatePasswordForm;
     props.form.validateFields((validateError, value) => {
       if (!validateError) {
         request
-          .post(`/api/users/password/${currentUsername}`, {
+          .post('/api/users/password', {
             params: {
               username: value.username,
               password: value.password,
             },
           })
           .then(() => {
-            this.setState({ updatePwdConfirmLoading: false, showUpdatePasswordForm: false });
+            this.setState({ updatePasswordConfirmLoading: false, showUpdatePasswordForm: false });
             props.form.resetFields();
             message.info('设置密码成功');
           })
           .catch(() => {
-            this.setState({ updatePwdConfirmLoading: false });
+            this.setState({ updatePasswordConfirmLoading: false });
             message.warn('设置密码失败');
           });
       }
@@ -182,7 +181,7 @@ export default class Users extends React.Component {
     this.setState({ loading: true });
     const role = authority === 'ADMIN' ? 'USER' : 'ADMIN';
     request
-      .post(`/api/users/role/${username}`, {
+      .post('/api/users/role', {
         params: {
           username,
           role,
@@ -190,7 +189,7 @@ export default class Users extends React.Component {
       })
       .then(() => {
         this.setState({ loading: false });
-        message.info(`用户 ${username} 已设为${authority === 'ADMIN' ? '管理员' : '普通用户'}`);
+        message.info(`用户 ${username} 已设为${authority === 'ADMIN' ? '普通用户' : '管理员'}`);
         this.loadData();
       })
       .catch((error) => {
@@ -201,8 +200,8 @@ export default class Users extends React.Component {
 
   render() {
     const {
-      loading, data, pagination, showCreateUserForm, newUserConfirmLoading,
-      showUpdatePasswordForm, updatePwdConfirmLoading, currentUsername,
+      loading, data, pagination, showNewUserForm, newUserConfirmLoading,
+      showUpdatePasswordForm, updatePasswordConfirmLoading, selectedUsername,
     } = this.state;
     const roles = {
       ADMIN: '管理员',
@@ -237,10 +236,7 @@ export default class Users extends React.Component {
           <span>
             {
               cell.map(entity => (
-                <Tag
-                  key={entity.authority}
-                  color={entity.authority === 'ADMIN' ? 'geekblue' : 'cyan'}
-                >
+                <Tag key={entity.authority} color={entity.authority === 'ADMIN' ? 'geekblue' : 'cyan'}>
                   {roles[entity.authority]}
                 </Tag>
               ))
@@ -250,36 +246,35 @@ export default class Users extends React.Component {
       },
       {
         title: '操作',
-        dataIndex: 'id',
         width: 120,
-        render: (id, record) => (
+        render: record => (
           <span>
+            <a href="#set-password" onClick={() => { this.setState({ showUpdatePasswordForm: true, selectedUsername: record.username }); }}>设置密码</a>
             {
               record.username === 'admin' ? null : (
                 <>
+                  <Divider type="vertical" />
                   <a href="#disable" onClick={() => this.updateUserStatus(record.username, !record.enabled)}>
                     {record.enabled ? '禁用用户' : '启用用户'}
                   </a>
-                  <Divider type="vertical" />
                 </>
               )
             }
-            <a href="#set-password" onClick={() => { this.setState({ showUpdatePasswordForm: true, currentUsername: record.username }); }}>设置密码</a>
-
             {
               record.username === 'admin' ? null : (
                 <>
                   <Divider type="vertical" />
                   <a href="#delete" onClick={() => this.deleteUser(record.username)}>删除</a>
-                  <Divider type="vertical" />
+
                 </>
               )
             }
             {
               record.username === 'admin' ? null : (
                 <>
+                  <Divider type="vertical" />
                   <a href="#disable" onClick={() => this.updateUserAuthority(record.username, record.authorities[0].authority)}>
-                    {record.authorities[0].authority === 'ROLE_ADMIN' ? '设为普通用户' : '设为管理员'}
+                    {record.authorities[0].authority === 'ADMIN' ? '设为普通用户' : '设为管理员'}
                   </a>
                 </>
               )
@@ -289,11 +284,7 @@ export default class Users extends React.Component {
       },
     ];
     return (
-      <div
-        style={{
-          padding: '20px 16px',
-        }}
-      >
+      <div style={{ padding: '20px 16px' }}>
         <div
           style={{
             borderTop: '1px solid #ddd',
@@ -302,18 +293,12 @@ export default class Users extends React.Component {
             paddingBottom: 14,
           }}
         >
-          <Button
-            type="primary"
-            icon="plus"
-            onClick={() => { this.setState({ showCreateUserForm: true }); }}
-          >
+          <Button type="primary" icon="plus" onClick={() => { this.setState({ showNewUserForm: true }); }}>
             添加用户
           </Button>
         </div>
         <Table
-          style={{
-            paddingTop: '14px',
-          }}
+          style={{ paddingTop: '14px' }}
           rowKey="id"
           columns={columns}
           dataSource={data}
@@ -322,19 +307,19 @@ export default class Users extends React.Component {
           onChange={this.handleTableChange}
         />
         <NewUserForm
-          visible={showCreateUserForm}
-          onCancel={() => { this.setState({ showCreateUserForm: false }); }}
+          visible={showNewUserForm}
+          onCancel={() => { this.setState({ showNewUserForm: false }); }}
           onCreate={this.handleCreateUser}
           wrappedComponentRef={(inst) => { this.newUserFormRef = inst; }}
           confirmLoading={newUserConfirmLoading}
         />
-        <UpdatePwdForm
-          username={currentUsername}
+        <UpdatePasswordForm
+          username={selectedUsername}
           visible={showUpdatePasswordForm}
           onCancel={() => { this.setState({ showUpdatePasswordForm: false }); }}
           onOk={this.handleUpdatePassword}
-          wrappedComponentRef={(inst) => { this.updatePwdForm = inst; }}
-          confirmLoading={updatePwdConfirmLoading}
+          wrappedComponentRef={(inst) => { this.updatePasswordForm = inst; }}
+          confirmLoading={updatePasswordConfirmLoading}
         />
       </div>
     );

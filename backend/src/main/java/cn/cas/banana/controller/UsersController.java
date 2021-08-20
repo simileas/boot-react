@@ -67,11 +67,11 @@ public class UsersController {
     return Message.builder().build();
   }
 
-  @PostMapping("/state/{username}")
-  Message updateState(@PathVariable String username, UserDto userDto) {
-    UserEntity userEntity = usersMapper.findByUsername(username);
+  @PostMapping("/state")
+  Message updateState(UserDto userDto) {
+    UserEntity userEntity = usersMapper.findByUsername(userDto.getUsername());
     jdbcUserDetailsManager.updateUser(User.builder()
-        .username(username)
+        .username(userDto.getUsername())
         .password(userEntity.getPassword())
         .roles(userEntity.getAuthorities().get(0).getAuthority())
         .disabled(!(userDto.isEnabled()))
@@ -79,11 +79,11 @@ public class UsersController {
     return Message.builder().build();
   }
 
-  @PostMapping("/password/{username}")
-  Message updatePassword(@PathVariable String username, UserDto userDto) {
-    UserEntity userEntity = usersMapper.findByUsername(username);
+  @PostMapping("/password")
+  Message updatePassword(UserDto userDto) {
+    UserEntity userEntity = usersMapper.findByUsername(userDto.getUsername());
     jdbcUserDetailsManager.updateUser(User.builder()
-        .username(username)
+        .username(userDto.getUsername())
         .password(userDto.getPassword())
         .roles(userEntity.getAuthorities().get(0).getAuthority())
         .disabled(!(userEntity.isEnabled()))
@@ -91,11 +91,11 @@ public class UsersController {
     return Message.builder().build();
   }
 
-  @PostMapping("/role/{username}")
-  Message updateRole(@PathVariable String username, UserDto userDto) {
-    UserEntity userEntity = usersMapper.findByUsername(username);
+  @PostMapping("/role")
+  Message updateRole(UserDto userDto) {
+    UserEntity userEntity = usersMapper.findByUsername(userDto.getUsername());
     jdbcUserDetailsManager.updateUser(User.builder()
-        .username(username)
+        .username(userDto.getUsername())
         .password(userEntity.getPassword())
         .roles(userDto.getRole())
         .disabled(!(userEntity.isEnabled()))
