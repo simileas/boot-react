@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -24,6 +25,7 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
     registry
         .addResourceHandler("/**")
         .addResourceLocations("classpath:/static/")
+        .setCacheControl(CacheControl.noCache())
         .resourceChain(false)
         .addResolver(new PushStateResourceResolver());
   }

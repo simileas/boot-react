@@ -38,9 +38,9 @@ dependencies {
 
   annotationProcessor("org.projectlombok:lombok")
   testAnnotationProcessor("org.projectlombok:lombok")
-  compile("commons-codec:commons-codec:1.13")
-  compile("commons-io:commons-io:2.6")
-  compile("org.apache.commons:commons-lang3:3.9")
+  implementation("commons-codec:commons-codec:1.13")
+  implementation("commons-io:commons-io:2.6")
+  implementation("org.apache.commons:commons-lang3:3.9")
 }
 
 tasks.withType<Test> {
