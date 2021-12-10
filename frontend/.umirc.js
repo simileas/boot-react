@@ -51,6 +51,7 @@ export default {
         dva: false,
         dynamicImport: false,
         title: 'Custom Title',
+        links: [{ rel: 'icon', href: '/favicon.ico' }],
         dll: false,
         locale: {
           enable: true,

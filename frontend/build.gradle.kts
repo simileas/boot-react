@@ -14,7 +14,6 @@ tasks.named<Jar>("jar") {
 node() {
   version = "12.20.0"
   npmVersion = "6.14.8"
-  distBaseUrl = "https://npm.taobao.org/mirrors/node/"
   download = true
   workDir = file("${project.buildDir}/node")
   npmWorkDir = file("${project.buildDir}/npm")
