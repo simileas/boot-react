@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaginationObject {
 
-  private int total;
+  private Long total;
   private Object list;
 }

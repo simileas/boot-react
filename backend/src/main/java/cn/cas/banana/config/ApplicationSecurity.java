@@ -61,10 +61,8 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         .logoutUrl("/api/user/logout")
         .addLogoutHandler(new SecurityContextLogoutHandler())
         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
-        .and()
-        .csrf()
-        .disable()
-        .headers().contentTypeOptions().disable();
+        .and().csrf().disable()
+        .headers().contentTypeOptions().disable().frameOptions().disable();
   }
 
   /**
