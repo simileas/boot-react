@@ -1,5 +1,15 @@
 # 2020 - 2021「Spring Boot & React」Web 项目框架
 
+## Quick Start
+
+执行如下命令：
+
+````shell script
+./gradlew clean build -x test && ./backend/build/libs/boot-react.jar
+````
+
+浏览器访问 `http://${ip}:8080`，用户名 `admin`，密码 `admin`。
+
 ## 编译方法
 
 > 所有的命令行在 *nix 系统下执行，如果在 windows 下执行请修改路径分隔符等差异的部分。
