@@ -9,11 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @Slf4j
 class UserServiceTest {
 
-  @Autowired
-  private UsersService userService;
+  @Autowired private UsersService userService;
 
   @Test
-  void createUser() {
-
-  }
+  void createUser() {}
 }

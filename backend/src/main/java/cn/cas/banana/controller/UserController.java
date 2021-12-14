@@ -28,8 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class UserController {
 
-  private static final String CURRENT_USER_KEY = "CURRENT_USER";
-
   @Autowired
   private JdbcUserDetailsManager jdbcUserDetailsManager;
 
@@ -58,8 +56,7 @@ public class UserController {
     WebAuthenticationDetails details =
         (WebAuthenticationDetails) context.getAuthentication().getDetails();
     User loggedIn = (User) context.getAuthentication().getPrincipal();
-    log.info("{} LOGIN IP: {}", loggedIn.getUsername(), details.getRemoteAddress());
-    httpSession.setAttribute(CURRENT_USER_KEY, loggedIn);
+    log.info("User [{}] logged in from IP: {}", loggedIn.getUsername(), details.getRemoteAddress());
     return Message.builder().message("Login successfully.").build();
   }
 

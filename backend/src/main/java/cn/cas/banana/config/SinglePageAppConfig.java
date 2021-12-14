@@ -50,7 +50,8 @@ public class SinglePageAppConfig implements WebMvcConfigurer {
             "ico",
             "txt",
             "map");
-    private final List<String> ignoredPaths = Arrays.asList("api", "error", "actuator");
+    private final List<String> ignoredPaths = Arrays.asList(
+        "api", "error", "actuator", "h2-console");
 
     @Override
     public Resource resolveResource(

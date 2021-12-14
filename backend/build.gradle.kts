@@ -22,13 +22,13 @@ val developmentOnly by configurations.creating
 configurations.runtimeClasspath.extendsFrom(developmentOnly)
 
 dependencies {
-  implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.1")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.security:spring-security-test")
   implementation("org.projectlombok:lombok")
-
+  implementation("org.flywaydb:flyway-core")
   developmentOnly("org.springframework.boot:spring-boot-devtools")
   runtimeOnly("com.h2database:h2")
   runtimeOnly("mysql:mysql-connector-java")

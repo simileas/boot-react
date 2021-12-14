@@ -2,14 +2,16 @@ package cn.cas.banana.controller;
 
 import cn.cas.banana.entity.Message;
 import cn.cas.banana.entity.PaginationObject;
-import cn.cas.banana.entity.PaginationParam;
 import cn.cas.banana.entity.users.UserDto;
 import cn.cas.banana.entity.users.UserEntity;
-import cn.cas.banana.mapper.UsersMapper;
+import cn.cas.banana.repository.UsersRepository;
 import cn.cas.banana.service.UsersService;
-import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -29,35 +31,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class UsersController {
 
-  @Autowired
-  private UsersMapper usersMapper;
+  @Autowired private UsersRepository userRepository;
 
-  @Autowired
-  private UsersService usersService;
+  @Autowired private UsersService usersService;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  @Autowired private PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private JdbcUserDetailsManager jdbcUserDetailsManager;
+  @Autowired private JdbcUserDetailsManager jdbcUserDetailsManager;
 
   @GetMapping
-  PaginationObject index(Integer current, Integer pageSize) {
-    int total = usersMapper.count();
-    List<UserEntity> users = usersMapper.findAll(PaginationParam.builder()
-        .current(current == null ? 1 : current)
-        .pageSize(pageSize == null ? 10 : pageSize).build());
-    return PaginationObject.builder().total(total).list(users).build();
+  PaginationObject index(String username, Integer current, Integer pageSize) {
+    Page<UserEntity> users = userRepository.findByUsernameLike("%" + username + "%", PageRequest.of(
+        current == null ? 0 : current - 1, pageSize == null ? 10 : pageSize,
+        Sort.by(Sort.Order.desc("id"))));
+    return PaginationObject.builder().total(users.getTotalElements())
+        .list(users.getContent()).build();
   }
 
   @PutMapping
   Message create(@RequestBody UserDto user) {
-    jdbcUserDetailsManager.createUser(User.builder()
-        .username(user.getUsername())
-        .password(user.getPassword())
-        .roles(user.getRole())
-        .passwordEncoder(password -> passwordEncoder.encode(password))
-        .build());
+    jdbcUserDetailsManager.createUser(
+        User.builder()
+            .username(user.getUsername())
+            .password(user.getPassword())
+            .roles(user.getRole())
+            .passwordEncoder(password -> passwordEncoder.encode(password))
+            .build());
     return Message.builder().build();
   }
 
@@ -69,37 +68,49 @@ public class UsersController {
 
   @PostMapping("/state")
   Message updateState(UserDto userDto) {
-    UserEntity userEntity = usersMapper.findByUsername(userDto.getUsername());
-    jdbcUserDetailsManager.updateUser(User.builder()
-        .username(userDto.getUsername())
-        .password(userEntity.getPassword())
-        .roles(userEntity.getAuthorities().get(0).getAuthority())
-        .disabled(!(userDto.isEnabled()))
-        .passwordEncoder(password -> password).build());
+    Optional<UserEntity> userEntity = userRepository.findByUsername(userDto.getUsername());
+    userEntity.ifPresent(
+        entity ->
+            jdbcUserDetailsManager.updateUser(
+                User.builder()
+                    .username(userDto.getUsername())
+                    .password(entity.getPassword())
+                    .roles(entity.getAuthorities().get(0).getAuthority().substring(5))
+                    .disabled(!(userDto.isEnabled()))
+                    .passwordEncoder(password -> password)
+                    .build()));
     return Message.builder().build();
   }
 
   @PostMapping("/password")
   Message updatePassword(UserDto userDto) {
-    UserEntity userEntity = usersMapper.findByUsername(userDto.getUsername());
-    jdbcUserDetailsManager.updateUser(User.builder()
-        .username(userDto.getUsername())
-        .password(userDto.getPassword())
-        .roles(userEntity.getAuthorities().get(0).getAuthority())
-        .disabled(!(userEntity.isEnabled()))
-        .passwordEncoder(password -> passwordEncoder.encode(password)).build());
+    Optional<UserEntity> userEntity = userRepository.findByUsername(userDto.getUsername());
+    userEntity.ifPresent(
+        entity ->
+            jdbcUserDetailsManager.updateUser(
+                User.builder()
+                    .username(userDto.getUsername())
+                    .password(userDto.getPassword())
+                    .roles(entity.getAuthorities().get(0).getAuthority().substring(5))
+                    .disabled(!(entity.isEnabled()))
+                    .passwordEncoder(password -> passwordEncoder.encode(password))
+                    .build()));
     return Message.builder().build();
   }
 
   @PostMapping("/role")
   Message updateRole(UserDto userDto) {
-    UserEntity userEntity = usersMapper.findByUsername(userDto.getUsername());
-    jdbcUserDetailsManager.updateUser(User.builder()
-        .username(userDto.getUsername())
-        .password(userEntity.getPassword())
-        .roles(userDto.getRole())
-        .disabled(!(userEntity.isEnabled()))
-        .passwordEncoder(password -> passwordEncoder.encode(password)).build());
+    Optional<UserEntity> userEntity = userRepository.findByUsername(userDto.getUsername());
+    userEntity.ifPresent(
+        entity ->
+            jdbcUserDetailsManager.updateUser(
+                User.builder()
+                    .username(userDto.getUsername())
+                    .password(entity.getPassword())
+                    .roles(userDto.getRole())
+                    .disabled(!(entity.isEnabled()))
+                    .passwordEncoder(password -> passwordEncoder.encode(password))
+                    .build()));
     return Message.builder().build();
   }
 }
